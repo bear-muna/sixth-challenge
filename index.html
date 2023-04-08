@@ -13,20 +13,21 @@
         <h1>Weather Dashboard</h1>
     </header>
     <main>
-        <aside id="search">
+        <form id="search">
             <h2>Search for a City:</h2>
-            <input type="city" placeholder="Seattle">
-            <button>Search</button>
+            <input id='city-input' for='search' type="city" placeholder="Seattle">
+            <button name="search" id="search-btn">Search</button>
             <hr>
-            <ul id="previous-search"></ul>
-        </aside>
+            <ul id="previous-search-list"></ul>
+        </form>
         <section id="results">
             <section id="city-day-of">
                 <h2 id="city-name"></h2>
-                <ul class="city-attributes"></ul>
+                <ul class="city-attributes-list"></ul>
             </section>
             <h3>5-Day Forecast:</h3>
             <section id="5-day">
+
             </section>
         </section>
     </main>
