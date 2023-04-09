@@ -10,13 +10,15 @@ var previousSearchArray = [];
 var apiData5Day = undefined;
 var apiDataCurrentDay = undefined;
 
-var apiKey = undefined;
+var apiKey;
 
 var cityAttList = document.querySelector('#city-attributes-list');
 var previousSearchList = document.querySelector('#previous-search-list');
 var searchBtn = document.querySelector('#search-btn');
 var cityInput = document.querySelector('#city-input');
 var searchForm = document.querySelector('#search');
+var cityNameEl = document.querySelector('#city-name');
+var fiveDaySec = document.querySelector('#five-day');
 
 function getApi() {
 
@@ -158,6 +160,8 @@ function create5DayCards() {
 
     console.log(fiveDayArray);
 
+    render5Day();
+
 }
 
 function currentDayCard() {
@@ -166,14 +170,12 @@ function currentDayCard() {
     for (let i = 0; i < 1; i++) {
         var cityAttributes = {
             name: undefined,
-            date: undefined,
             weather: undefined,
             temperature: undefined,
             wind: undefined,
             humidity: undefined,
         }
         cityAttributes.name = apiDataCurrentDay.name;
-        cityAttributes.date = undefined;
         cityAttributes.weather = apiDataCurrentDay.weather[0].main;
         cityAttributes.temperature = apiDataCurrentDay.main.temp;
         cityAttributes.wind = apiDataCurrentDay.wind.speed;
@@ -183,6 +185,73 @@ function currentDayCard() {
     }
     
     console.log(currentDayArray);
+
+    renderCurrentDay();
+
+
+}
+
+function renderCurrentDay() {
+
+    cityAttList.innerHTML = "";
+
+    var weatherLi = document.createElement('li');
+    var tempLi = document.createElement('li');
+    var windLi = document.createElement('li');
+    var humidLi = document.createElement('li');
+
+    cityNameEl.textContent = currentDayArray[0].name;
+    weatherLi.textContent = currentDayArray[0].weather;
+    tempLi.textContent = currentDayArray[0].temperature;
+    windLi.textContent = currentDayArray[0].wind;
+    humidLi.textContent = currentDayArray[0].humidity;
+
+    cityAttList.append(weatherLi);
+    cityAttList.append(tempLi);
+    cityAttList.append(windLi);
+    cityAttList.append(humidLi);
+
+
+}
+
+function render5Day() {
+
+    if (fiveDaySec !== null) {
+        fiveDaySec.innerHTML = "";
+    } else {
+        for(let i = 0; i < fiveDayArray.length; i++) {
+            var cardSec = document.createElement('section');
+    
+            cardSec.setAttribute('class', 'card');
+
+            var cardUl = document.createElement('ul');
+            
+            var nameLi = document.createElement('li');
+            var weatherLi = document.createElement('li');
+            var tempLi = document.createElement('li');
+            var windLi = document.createElement('li');
+            var humidLi = document.createElement('li');
+        
+            nameLi.textContent = fiveDayArray[i].name;
+            weatherLi.textContent = fiveDayArray[i].weather;
+            tempLi.textContent = fiveDayArray[i].temperature;
+            windLi.textContent = fiveDayArray[i].wind;
+            humidLi.textContent = fiveDayArray[i].humidity;
+        
+            cardUl.append(nameLi);
+            cardUl.append(weatherLi);
+            cardUl.append(tempLi);
+            cardUl.append(windLi);
+            cardUl.append(humidLi);
+
+            cardSec.append(cardUl);
+    
+            fiveDaySec.append(cardSec);
+    
+        }
+
+    }
+    
 
 }
 

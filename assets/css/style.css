@@ -62,11 +62,24 @@ hr {
 }
 
 #city-day-of {
-    height: 30%;
+    height: 40%;
     border: var(--border);
 }
 
 h3 {
     height: 10%;
     border: var(--border);
+}
+
+#five-day {
+    height: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: var(--border);
+}
+
+.card {
+    height: 80%;
+    width: 15%;
 }
