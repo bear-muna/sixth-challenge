@@ -2,10 +2,15 @@
 var cityName = undefined;
 var lat = undefined;
 var lon = undefined;
-var cityURL = undefined;
-var attArray = [];
+var fiveDayURL = undefined;
+var currentDayURL = undefined;
+var fiveDayArray = [];
+var currentDayArray = [];
 var previousSearchArray = [];
+var apiData5Day = undefined;
+var apiDataCurrentDay = undefined;
 
+var apiKey = undefined;
 
 var cityAttList = document.querySelector('#city-attributes-list');
 var previousSearchList = document.querySelector('#previous-search-list');
@@ -16,7 +21,7 @@ var searchForm = document.querySelector('#search');
 function getApi() {
 
   
-    fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&{apikey}")
+    fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid=" + apiKey)
     .then(function (response) {
       console.log(response);
       return response.json();
@@ -25,20 +30,20 @@ function getApi() {
         console.log(data);
         lat = data[0].lat;
         lon = data[0].lon;
-        cityURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid={api-key}";
-        console.log(lat);
-        console.log(lon);
-        console.log(cityURL);
-        getApiCity(cityURL);
+
+        currentDayURL = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey + "&units=imperial";
+        getApiCityCurrentDay(currentDayURL);
+
+        fiveDayURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey + "&units=imperial";
+        getApiCity5Day(fiveDayURL);
+
+
     })};
 
 
-
-
-
-function getApiCity(cityURL) {
+function getApiCityCurrentDay(url) {
     
-    fetch(cityURL)
+    fetch(url)
         .then(function(response) {
             console.log(response);
             return response.json();
@@ -46,19 +51,26 @@ function getApiCity(cityURL) {
         .then(function(data) {
             console.log(data);
 
-            for(let i = 0; i < 3; i++) {
-                console.log("Date: " + data.list[i].dt_txt);
-                console.log("Temperature: " + data.list[i].main.temp);
-                console.log("Wind: " + data.list[i].wind.speed);
-                console.log("Humidity: " + data.list[i].main.humidity);
-            }
+            apiDataCurrentDay = data;
 
-            
+            currentDayCard();
+        })
+};
 
 
+function getApiCity5Day(url) {
+    
+    fetch(url)
+        .then(function(response) {
+            console.log(response);
+            return response.json();
+        })
+        .then(function(data) {
+            console.log(data);
 
+            apiData5Day = data;
 
-
+            create5DayCards();
         })
 };
 
@@ -118,6 +130,61 @@ function renderArray() {
 
 }
 
+function create5DayCards() {
+
+    fiveDayArray = [];
+
+    console.log(apiData5Day);
+
+    
+    for (let i = 0; i < 40; i = i + 8) {
+        var cityAttributes = {
+            name: undefined,
+            date: undefined,
+            weather: undefined,
+            temperature: undefined,
+            wind: undefined,
+            humidity: undefined,
+        }
+        cityAttributes.name = apiData5Day.city.name;
+        cityAttributes.date = apiData5Day.list[i].dt_txt;
+        cityAttributes.weather = apiData5Day.list[i].weather[0].main;
+        cityAttributes.temperature = apiData5Day.list[i].main.temp;
+        cityAttributes.wind = apiData5Day.list[i].wind.speed;
+        cityAttributes.humidity = apiData5Day.list[i].main.humidity;
+
+        fiveDayArray.push(cityAttributes);
+    }
+
+    console.log(fiveDayArray);
+
+}
+
+function currentDayCard() {
+    currentDayArray = [];
+
+    for (let i = 0; i < 1; i++) {
+        var cityAttributes = {
+            name: undefined,
+            date: undefined,
+            weather: undefined,
+            temperature: undefined,
+            wind: undefined,
+            humidity: undefined,
+        }
+        cityAttributes.name = apiDataCurrentDay.name;
+        cityAttributes.date = undefined;
+        cityAttributes.weather = apiDataCurrentDay.weather[0].main;
+        cityAttributes.temperature = apiDataCurrentDay.main.temp;
+        cityAttributes.wind = apiDataCurrentDay.wind.speed;
+        cityAttributes.humidity = apiDataCurrentDay.main.humidity;
+
+        currentDayArray.push(cityAttributes);
+    }
+    
+    console.log(currentDayArray);
+
+}
 
 searchForm.addEventListener('submit', search);
 
