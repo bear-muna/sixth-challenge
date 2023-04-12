@@ -1,6 +1,7 @@
 // Variables
 var cityName = undefined;
 var lat = undefined;
+// Global variables being used within functions
 var lon = undefined;
 var fiveDayURL = undefined;
 var currentDayURL = undefined;
@@ -10,8 +11,10 @@ var previousSearchArray = [];
 var apiData5Day = undefined;
 var apiDataCurrentDay = undefined;
 
-var apiKey = "c17de62560563037ab3c738e326cb15f";
+// API-KEY to be used when you need it
+var apiKey = "";
 
+// Variables created using query selectors for DOM manipulation
 var cityAttList = document.querySelector('#city-attributes-list');
 var previousSearchList = document.querySelector('#previous-search-list');
 var searchBtn = document.querySelector('#search-btn');
@@ -22,9 +25,11 @@ var fiveDaySec = document.querySelector('#five-day');
 var cityDayOfSec = document.querySelector('#city-day-of');
 var forecastTitleh3 = document.querySelector('#forecast-title');
 
+
+// API function
 function getApi() {
 
-  
+    // fetch function to get the latitude and longitude of a given city
     fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid=" + apiKey)
     .then(function (response) {
       console.log(response);
@@ -35,16 +40,18 @@ function getApi() {
         lat = data[0].lat;
         lon = data[0].lon;
 
+        // API for same day weather
         currentDayURL = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey + "&units=imperial";
         getApiCityCurrentDay(currentDayURL);
 
+        // API for five day forecast
         fiveDayURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey + "&units=imperial";
         getApiCity5Day(fiveDayURL);
 
 
     })};
 
-
+// API function to fetch current day weather of city
 function getApiCityCurrentDay(url) {
     
     fetch(url)
@@ -55,13 +62,14 @@ function getApiCityCurrentDay(url) {
         .then(function(data) {
             console.log(data);
 
+            // Global variable to be used for data
             apiDataCurrentDay = data;
 
             currentDayCard();
         })
 };
 
-
+// API function to fetch five day weather of city
 function getApiCity5Day(url) {
     
     fetch(url)
@@ -72,58 +80,50 @@ function getApiCity5Day(url) {
         .then(function(data) {
             console.log(data);
 
+            // Global variable to be used for data
             apiData5Day = data;
 
             create5DayCards();
         })
 };
 
-
+// Function for event listener when inputing city
 function search(event) {
     event.preventDefault();
 
     if (cityInput.value.trim() !== "") {
-
         cityName = cityInput.value.trim();
-    
         cityInput.value = "";
     
-        console.log(cityName);
-    
         storeLocal();
-    
         retrieveLocal();
-    
         getApi();
     }
-
 }
 
+// Function to store search history into local storage
 function storeLocal() {
 
     var previousCityName = cityName;
-
     if (previousSearchArray.length > 5) {
         previousSearchArray.pop();
     }
-
     previousSearchArray.unshift(previousCityName);
 
+    // Setting array into local storage
     localStorage.setItem('previous-search', JSON.stringify(previousSearchArray));
-
-
 }
 
+// Function to pull array from local storage
 function retrieveLocal() {
     var parsedArray = JSON.parse(localStorage.getItem('previous-search'));
-
     if (parsedArray !== null) {
         previousSearchArray = parsedArray;
     }
-
     renderArray();
 }
 
+// Function to take search history array and show on page
 function renderArray() {
     previousSearchList.textContent = "";
     
@@ -141,13 +141,11 @@ function renderArray() {
 
 }
 
+// Function to create five instances of a city's weather 
 function create5DayCards() {
-
     fiveDayArray = [];
 
-    console.log(apiData5Day);
-
-    
+    // For loop to create object of city's weather for each day
     for (let i = 0; i < 40; i = i + 8) {
         var cityAttributes = {
             name: undefined,
@@ -166,16 +164,14 @@ function create5DayCards() {
 
         fiveDayArray.push(cityAttributes);
     }
-
-    console.log(fiveDayArray);
-
     renderFiveDay();
-
 }
 
+// Function to create an instance of the city's current weather
 function currentDayCard() {
     currentDayArray = [];
 
+    // For loop to create object of a city's current day weather
     for (let i = 0; i < 1; i++) {
         var cityAttributes = {
             name: undefined,
@@ -193,16 +189,11 @@ function currentDayCard() {
 
         currentDayArray.push(cityAttributes);
     }
-    
-    console.log(currentDayArray);
-
     renderCurrentDay();
-
-
 }
 
+// Function to display current day weather onto page
 function renderCurrentDay() {
-
     cityAttList.innerHTML = "";
 
     var weatherImg = document.createElement('img');
@@ -228,21 +219,17 @@ function renderCurrentDay() {
 
 }
 
+// Function to show city's five day forecast onto page
 function renderFiveDay() {
-
     if (fiveDaySec !== null) {
-
         fiveDaySec.innerHTML = "";
     }
 
     for(let i = 0; i < fiveDayArray.length; i++) {
-        
         var cardSec = document.createElement('section');
-
         cardSec.setAttribute('class', 'cards');
 
         var cardUl = document.createElement('ul');
-
         cardUl.setAttribute('class', 'five-day-list');
         
         var dateLi = document.createElement('h3');
@@ -266,14 +253,10 @@ function renderFiveDay() {
         cardSec.appendChild(cardUl);
 
         fiveDaySec.appendChild(cardSec);
- 
     }
-
-
-    
-
 }
 
+// Function for event listener when clicking on search history
 function searchHistoryCity(e) {
     e.preventDefault();
     var ev = e.target;
@@ -286,8 +269,10 @@ function searchHistoryCity(e) {
     }
 }
 
+// Event listener on submit of city
 searchForm.addEventListener('submit', search);
 
+// Event listener on click of search history
 previousSearchList.addEventListener('click', searchHistoryCity)
 
 retrieveLocal();
