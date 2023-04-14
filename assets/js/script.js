@@ -12,7 +12,7 @@ var apiData5Day = undefined;
 var apiDataCurrentDay = undefined;
 
 // API-KEY to be used when you need it
-var apiKey = "";
+var apiKey = "c17de62560563037ab3c738e326cb15f";
 
 // Variables created using query selectors for DOM manipulation
 var cityAttList = document.querySelector('#city-attributes-list');
